@@ -13,7 +13,6 @@ export default function DashboardListView({
   };
 
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRow(newSelectedRowKeys);
   };
 
