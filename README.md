@@ -1,3 +1,17 @@
+### `Invoice Application`
+
+List Invoice - Here we have 3 sections, late invoice, unpaid Invoice & paid invoice, I have already inbuild 5 dummy records on this project, so you can understand the application clearly
+
+Add Invoice - On top rigth corner use can able to see add invoice button, using that we can able to add the lineitems, customer details, paying amount etc,..
+kind of all invoice related details (once the invoice is added it will move to listing the invoice page)
+
+View Invoice - On Clicking the particular row we can able to open the created invoice, View invoice page here you can able to see the details of the invoice
+
+Payment - In view invoice page if the invoice is not paid then you can can able to pay the invoice based the details given in the payment methods
+
+Email invoice - on selecting the checkbox of the particular invoice, you can able to see the send email button on the top right corner in the page, 
+on clicking that button, and enter the email you can able to send the invoice that email (dummy one wont work without backend)
+
 ### `npm install`
 
 Run this comment to install all the dependencies 
