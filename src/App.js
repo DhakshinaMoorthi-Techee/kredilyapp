@@ -1,24 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useState } from "react";
+import { Invoice } from "./data";
+import Main from "./Components/Main";
+
+export const MyContext = React.createContext();
 
 function App() {
+  const [invoiceDetails, setInvoiceDetails] = useState(Invoice);
+
+  const updateInvoiceDetails = (value) => {
+    setInvoiceDetails([...invoiceDetails, value]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MyContext.Provider value={[invoiceDetails, updateInvoiceDetails]}>
+      <div className="App">
+        <Main />
+      </div>
+    </MyContext.Provider>
   );
 }
 
