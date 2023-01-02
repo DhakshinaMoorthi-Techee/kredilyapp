@@ -2,10 +2,26 @@ import { Table, Tag } from "antd";
 import React from "react";
 import { formatAmount } from "../data";
 
-export default function DashboardListView({ dataSource, onEditInvoiceOpen }) {
+export default function DashboardListView({
+  dataSource,
+  onEditInvoiceOpen,
+  selectedRow,
+  setSelectedRow,
+}) {
   const onSelectRow = (record, index) => {
     onEditInvoiceOpen(record, index);
   };
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    setSelectedRow(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRow,
+    onChange: onSelectChange,
+  };
+
   const columns = [
     {
       title: "INVOICE NUMBER",
@@ -107,6 +123,8 @@ export default function DashboardListView({ dataSource, onEditInvoiceOpen }) {
         columns={columns}
         dataSource={dataSource}
         pagination={false}
+        rowSelection={rowSelection}
+        rowKey="invoiceNumber"
         onRow={(record) => {
           return {
             onClick: () => {

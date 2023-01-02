@@ -1,6 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../App";
-import { PageHeader, Button, Modal, Row, Col, Card, Spin, Tag } from "antd";
+import {
+  PageHeader,
+  Button,
+  Modal,
+  Row,
+  Col,
+  Card,
+  Spin,
+  Form,
+  Input,
+  message,
+  Tooltip,
+} from "antd";
 import "antd/dist/antd.css";
 import Add from "./Add";
 import { MailOutlined, PlusOutlined } from "@ant-design/icons";
@@ -11,6 +23,7 @@ export default function Main() {
   const invoiceDetails = data[0];
   const [onAddModal, setAddModal] = useState(false);
   const [onEditModal, setEditModal] = useState(false);
+  const [onSendEmailModal, setSendEmailModal] = useState(false);
   const [listStatus, setListStatus] = useState("Late Invoices");
   const [dataSource, setDataSource] = useState([]);
   const [unPaidData, setUnpaidData] = useState([]);
@@ -18,7 +31,9 @@ export default function Main() {
   const [latePayData, setLatePayData] = useState([]);
   const [editRecord, setEditRecord] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [emailLoader, setEmailLoader] = useState(false);
   const [mainIndex, setMainIndex] = useState(null);
+  const [selectedRow, setSelectedRow] = useState([]);
   const [totalAmountValues, setTotalAmountValues] = useState({
     paid: 0,
     unPaid: 0,
@@ -62,7 +77,13 @@ export default function Main() {
   };
 
   const onSendEmail = () => {
-    console.log("first");
+    setEmailLoader(true);
+    setTimeout(() => {
+      setEmailLoader(false);
+      setSendEmailModal(false);
+      message.success("Email Send Successfully");
+      setSelectedRow([]);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -160,9 +181,25 @@ export default function Main() {
         title={<h1>Invoice Details</h1>}
         ghost
         extra={[
-          <Button onClick={onSendEmail} type="dashed">
-            <MailOutlined /> SEND EMAIL
-          </Button>,
+          selectedRow.length == 0 ? (
+            <Tooltip title="Please Select The Invoice">
+              <Button
+                onClick={() => setSendEmailModal(true)}
+                type="dashed"
+                disabled={selectedRow.length == 0}
+              >
+                <MailOutlined /> SEND EMAIL
+              </Button>
+            </Tooltip>
+          ) : (
+            <Button
+              onClick={() => setSendEmailModal(true)}
+              type="dashed"
+              disabled={selectedRow.length == 0}
+            >
+              <MailOutlined /> SEND EMAIL
+            </Button>
+          ),
           <Button onClick={onAddInvoice} type="primary">
             <PlusOutlined /> ADD INVOICE
           </Button>,
@@ -193,6 +230,8 @@ export default function Main() {
             <DashboardListView
               dataSource={dataSource}
               onEditInvoiceOpen={onEditInvoiceOpen}
+              setSelectedRow={setSelectedRow}
+              selectedRow={selectedRow}
             />
           </PageHeader>
         </Card>
@@ -226,6 +265,41 @@ export default function Main() {
           initialValues={editRecord}
           mainIndex={mainIndex}
         />
+      </Modal>
+      <Modal
+        width={"25%"}
+        title={"SEND EMAIL"}
+        open={onSendEmailModal}
+        onCancel={() => setSendEmailModal(false)}
+        destroyOnClose
+        footer={false}
+      >
+        <Spin spinning={emailLoader}>
+          <Form onFinish={onSendEmail} layout={"vertical"}>
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                <Form.Item
+                  name="email"
+                  label="TO EMAIL"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Enter Email",
+                      type: "email",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Email" maxLength={25} />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row justify={"center"}>
+              <Button htmlType="submit" type="primary">
+                SEND
+              </Button>
+            </Row>
+          </Form>
+        </Spin>
       </Modal>
     </Spin>
   );
